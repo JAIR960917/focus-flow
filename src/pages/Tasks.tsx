@@ -3,35 +3,16 @@ import { Plus, Check, Trash2, Target, Flame } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-
-interface Task {
-  id: string;
-  title: string;
-  completed: boolean;
-  createdAt: Date;
-}
+import { useOfflineTasks } from "@/hooks/useOfflineTasks";
 
 const Tasks = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const { tasks, loaded, addTask, toggleTask, deleteTask } = useOfflineTasks();
   const [newTask, setNewTask] = useState("");
 
-  const addTask = () => {
+  const handleAddTask = () => {
     if (!newTask.trim()) return;
-    setTasks((prev) => [
-      ...prev,
-      { id: crypto.randomUUID(), title: newTask.trim(), completed: false, createdAt: new Date() },
-    ]);
+    addTask(newTask.trim());
     setNewTask("");
-  };
-
-  const toggleTask = (id: string) => {
-    setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
-    );
-  };
-
-  const deleteTask = (id: string) => {
-    setTasks((prev) => prev.filter((t) => t.id !== id));
   };
 
   const completedCount = tasks.filter((t) => t.completed).length;
@@ -72,23 +53,30 @@ const Tasks = () => {
         </div>
       </Card>
 
+      {/* Offline indicator */}
+      {!navigator.onLine && (
+        <div className="mb-4 px-3 py-2 bg-warning/20 text-warning rounded-lg text-xs text-center font-medium">
+          📴 Modo offline — dados serão sincronizados quando a internet voltar
+        </div>
+      )}
+
       {/* Add Task */}
       <div className="flex gap-2 mb-6 animate-slide-up" style={{ animationDelay: "0.1s" }}>
         <Input
           value={newTask}
           onChange={(e) => setNewTask(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && addTask()}
+          onKeyDown={(e) => e.key === "Enter" && handleAddTask()}
           placeholder="Adicionar nova tarefa..."
           className="flex-1 bg-card border-border"
         />
-        <Button onClick={addTask} size="icon" className="gradient-primary text-primary-foreground shrink-0">
+        <Button onClick={handleAddTask} size="icon" className="gradient-primary text-primary-foreground shrink-0">
           <Plus className="w-4 h-4" />
         </Button>
       </div>
 
       {/* Task List */}
       <div className="space-y-2">
-        {tasks.length === 0 && (
+        {loaded && tasks.length === 0 && (
           <div className="text-center py-12 text-muted-foreground">
             <Target className="w-12 h-12 mx-auto mb-3 opacity-30" />
             <p className="text-sm">Nenhuma tarefa ainda. Adicione a primeira!</p>

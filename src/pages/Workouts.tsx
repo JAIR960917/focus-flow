@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Dumbbell, Clock, Flame, ChevronDown, ChevronUp, Play, CheckCircle2 } from "lucide-react";
+import { Dumbbell, Clock, Flame, ChevronDown, ChevronUp, CheckCircle2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useOfflineWorkouts } from "@/hooks/useOfflineWorkouts";
 
 interface Exercise {
   name: string;
@@ -86,16 +87,9 @@ const levelColor: Record<string, string> = {
 
 const Workouts = () => {
   const [expanded, setExpanded] = useState<string | null>(null);
-  const [completed, setCompleted] = useState<Set<string>>(new Set());
+  const { completedIds, toggleWorkout } = useOfflineWorkouts();
 
   const toggleExpand = (id: string) => setExpanded(expanded === id ? null : id);
-  const markDone = (id: string) => {
-    setCompleted((prev) => {
-      const s = new Set(prev);
-      s.has(id) ? s.delete(id) : s.add(id);
-      return s;
-    });
-  };
 
   return (
     <div className="min-h-screen pb-20 px-4 pt-6 max-w-lg mx-auto">
@@ -103,6 +97,12 @@ const Workouts = () => {
         <h1 className="text-2xl font-bold text-foreground">Treinos em Casa</h1>
         <p className="text-sm text-muted-foreground mt-1">Escolha seu treino e comece agora</p>
       </div>
+
+      {!navigator.onLine && (
+        <div className="mb-4 px-3 py-2 bg-warning/20 text-warning rounded-lg text-xs text-center font-medium">
+          📴 Modo offline — dados serão sincronizados quando a internet voltar
+        </div>
+      )}
 
       <div className="space-y-3">
         {workouts.map((w, i) => (
@@ -116,16 +116,16 @@ const Workouts = () => {
               className="w-full p-4 flex items-center gap-3 text-left"
             >
               <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                completed.has(w.id) ? "bg-accent/20" : "gradient-fitness"
+                completedIds.has(w.id) ? "bg-accent/20" : "gradient-fitness"
               }`}>
-                {completed.has(w.id) ? (
+                {completedIds.has(w.id) ? (
                   <CheckCircle2 className="w-5 h-5 text-accent" />
                 ) : (
                   <Dumbbell className="w-5 h-5 text-accent-foreground" />
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <p className={`font-semibold text-sm ${completed.has(w.id) ? "line-through text-muted-foreground" : "text-foreground"}`}>
+                <p className={`font-semibold text-sm ${completedIds.has(w.id) ? "line-through text-muted-foreground" : "text-foreground"}`}>
                   {w.title}
                 </p>
                 <div className="flex items-center gap-3 mt-1">
@@ -160,13 +160,13 @@ const Workouts = () => {
                   ))}
                 </div>
                 <Button
-                  onClick={() => markDone(w.id)}
+                  onClick={() => toggleWorkout(w.id)}
                   className={`w-full mt-3 ${
-                    completed.has(w.id) ? "bg-secondary text-secondary-foreground" : "gradient-fitness text-accent-foreground"
+                    completedIds.has(w.id) ? "bg-secondary text-secondary-foreground" : "gradient-fitness text-accent-foreground"
                   }`}
-                  variant={completed.has(w.id) ? "secondary" : "default"}
+                  variant={completedIds.has(w.id) ? "secondary" : "default"}
                 >
-                  {completed.has(w.id) ? "Desmarcar" : "Marcar como concluído"}
+                  {completedIds.has(w.id) ? "Desmarcar" : "Marcar como concluído"}
                 </Button>
               </div>
             )}
