@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
+import { initSync } from "./lib/syncEngine";
 
 // Guard: don't register SW in iframes or preview hosts
 const isInIframe = (() => {
@@ -20,5 +21,8 @@ if (isPreviewHost || isInIframe) {
     registrations.forEach((r) => r.unregister());
   });
 }
+
+// Initialize offline sync
+initSync();
 
 createRoot(document.getElementById("root")!).render(<App />);

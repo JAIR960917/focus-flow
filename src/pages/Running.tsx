@@ -3,6 +3,7 @@ import { Play, Square, MapPin, Clock, Route } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import RunMap from "@/components/RunMap";
+import { useOfflineRunning } from "@/hooks/useOfflineRunning";
 
 export interface GeoPoint {
   lat: number;
@@ -43,6 +44,7 @@ const Running = () => {
   const [error, setError] = useState<string | null>(null);
   const watchIdRef = useRef<number | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const { saveSession } = useOfflineRunning();
 
   const startRun = useCallback(() => {
     if (!navigator.geolocation) {
@@ -82,6 +84,23 @@ const Running = () => {
     setHasFinished(true);
   }, []);
 
+  // Save session when run finishes
+  useEffect(() => {
+    if (hasFinished && points.length > 1) {
+      const distance = calcDistance(points);
+      const pace = distance > 0 && elapsed > 0
+        ? formatTime(Math.round(elapsed / (distance / 1000)))
+        : "--:--";
+      saveSession({
+        distance_meters: distance,
+        duration_seconds: elapsed,
+        avg_pace: pace,
+        gps_points: points,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasFinished]);
+
   useEffect(() => {
     return () => {
       if (watchIdRef.current !== null) navigator.geolocation.clearWatch(watchIdRef.current);
@@ -102,6 +121,12 @@ const Running = () => {
         <h1 className="text-2xl font-bold text-foreground">Corrida</h1>
         <p className="text-sm text-muted-foreground mt-1">Rastreie sua corrida em tempo real</p>
       </div>
+
+      {!navigator.onLine && (
+        <div className="mb-4 px-3 py-2 bg-warning/20 text-warning rounded-lg text-xs text-center font-medium">
+          📴 Modo offline — dados serão sincronizados quando a internet voltar
+        </div>
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-3 mb-4 animate-slide-up">
@@ -178,6 +203,9 @@ const Running = () => {
               <span className="font-medium text-foreground">{points.length}</span>
             </div>
           </div>
+          <p className="text-xs text-muted-foreground mt-3 text-center">
+            ✅ Sessão salva {navigator.onLine ? "e sincronizada" : "localmente — será sincronizada quando online"}
+          </p>
         </Card>
       )}
     </div>
