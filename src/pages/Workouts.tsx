@@ -92,7 +92,7 @@ const Workouts = () => {
   const toggleExpand = (id: string) => setExpanded(expanded === id ? null : id);
 
   return (
-    <div className="min-h-screen pb-20 px-4 pt-6 max-w-lg mx-auto">
+    <div className="min-h-screen px-4 pt-6 pb-8 max-w-2xl mx-auto sm:px-6 lg:px-8">
       <div className="mb-6 animate-fade-in">
         <h1 className="text-2xl font-bold text-foreground">Treinos em Casa</h1>
         <p className="text-sm text-muted-foreground mt-1">Escolha seu treino e comece agora</p>

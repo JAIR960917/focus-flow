@@ -20,7 +20,7 @@ const Tasks = () => {
   const progress = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
 
   return (
-    <div className="min-h-screen pb-20 px-4 pt-6 max-w-lg mx-auto">
+    <div className="min-h-screen px-4 pt-6 pb-8 max-w-2xl mx-auto sm:px-6 lg:px-8">
       {/* Header */}
       <div className="mb-6 animate-fade-in">
         <h1 className="text-2xl font-bold text-foreground">Minhas Tarefas</h1>
