@@ -42,9 +42,28 @@ const Running = () => {
   const [points, setPoints] = useState<GeoPoint[]>([]);
   const [elapsed, setElapsed] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [initialPos, setInitialPos] = useState<GeoPoint | null>(null);
   const watchIdRef = useRef<number | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const { saveSession } = useOfflineRunning();
+
+  // Capture initial position on page load
+  useEffect(() => {
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setInitialPos({
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+          timestamp: Date.now(),
+        });
+      },
+      () => {
+        // silently fail — user will see error when starting
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  }, []);
 
   const startRun = useCallback(() => {
     if (!navigator.geolocation) {
@@ -84,7 +103,6 @@ const Running = () => {
     setHasFinished(true);
   }, []);
 
-  // Save session when run finishes
   useEffect(() => {
     if (hasFinished && points.length > 1) {
       const distance = calcDistance(points);
@@ -107,6 +125,9 @@ const Running = () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, []);
+
+  // Use initial position as the first map point when no run points exist
+  const mapPoints = points.length > 0 ? points : initialPos ? [initialPos] : [];
 
   const distance = calcDistance(points);
   const distanceKm = (distance / 1000).toFixed(2);
@@ -149,8 +170,8 @@ const Running = () => {
 
       {/* Map */}
       <Card className="glass-card overflow-hidden mb-6 animate-slide-up" style={{ animationDelay: "0.1s" }}>
-        <div className="h-[300px] relative">
-          <RunMap points={points} isRunning={isRunning} />
+        <div className="h-[300px] sm:h-[400px] relative">
+          <RunMap points={mapPoints} isRunning={isRunning} />
         </div>
       </Card>
 
