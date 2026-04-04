@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
-import { useOfflineWorkouts } from "@/hooks/useOfflineWorkouts";
+import { useWorkoutsSupabase } from "@/hooks/useWorkoutsSupabase";
 
 interface Exercise {
   name: string;
@@ -335,7 +335,7 @@ const ActiveWorkout = ({ workout, onFinish, defaultRest }: ActiveWorkoutProps) =
 const Workouts = () => {
   const [expanded, setExpanded] = useState<string | null>(null);
   const [activeWorkoutId, setActiveWorkoutId] = useState<string | null>(null);
-  const { completedIds, toggleWorkout } = useOfflineWorkouts();
+  const { completedIds, toggleWorkout } = useWorkoutsSupabase();
 
   const toggleExpand = (id: string) => setExpanded(expanded === id ? null : id);
 

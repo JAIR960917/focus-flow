@@ -3,7 +3,7 @@ import { Play, Square, MapPin, Clock, Route } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import RunMap from "@/components/RunMap";
-import { useOfflineRunning } from "@/hooks/useOfflineRunning";
+import { useRunningSupabase } from "@/hooks/useRunningSupabase";
 
 export interface GeoPoint {
   lat: number;
@@ -45,7 +45,7 @@ const Running = () => {
   const [initialPos, setInitialPos] = useState<GeoPoint | null>(null);
   const watchIdRef = useRef<number | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const { saveSession } = useOfflineRunning();
+  const { saveSession } = useRunningSupabase();
 
   // Capture initial position on page load
   useEffect(() => {

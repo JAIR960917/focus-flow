@@ -14,6 +14,74 @@ export type Database = {
   }
   public: {
     Tables: {
+      exercises: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          reps: string
+          sets: number
+          sort_order: number
+          workout_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          reps?: string
+          sets?: number
+          sort_order?: number
+          workout_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          reps?: string
+          sets?: number
+          sort_order?: number
+          workout_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exercises_workout_id_fkey"
+            columns: ["workout_id"]
+            isOneToOne: false
+            referencedRelation: "workouts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       running_sessions: {
         Row: {
           avg_pace: string | null
@@ -23,6 +91,7 @@ export type Database = {
           duration_seconds: number
           gps_points: Json | null
           id: string
+          user_id: string | null
         }
         Insert: {
           avg_pace?: string | null
@@ -32,6 +101,7 @@ export type Database = {
           duration_seconds?: number
           gps_points?: Json | null
           id?: string
+          user_id?: string | null
         }
         Update: {
           avg_pace?: string | null
@@ -41,6 +111,40 @@ export type Database = {
           duration_seconds?: number
           gps_points?: Json | null
           id?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      runs: {
+        Row: {
+          avg_pace: string | null
+          created_at: string
+          distance_meters: number
+          duration_seconds: number
+          id: string
+          ran_at: string
+          route: Json | null
+          user_id: string
+        }
+        Insert: {
+          avg_pace?: string | null
+          created_at?: string
+          distance_meters?: number
+          duration_seconds?: number
+          id?: string
+          ran_at?: string
+          route?: Json | null
+          user_id: string
+        }
+        Update: {
+          avg_pace?: string | null
+          created_at?: string
+          distance_meters?: number
+          duration_seconds?: number
+          id?: string
+          ran_at?: string
+          route?: Json | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -52,6 +156,7 @@ export type Database = {
           id: string
           title: string
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           completed?: boolean
@@ -60,6 +165,7 @@ export type Database = {
           id?: string
           title: string
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           completed?: boolean
@@ -68,6 +174,7 @@ export type Database = {
           id?: string
           title?: string
           updated_at?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -76,19 +183,49 @@ export type Database = {
           completed_at: string
           device_id: string
           id: string
+          user_id: string | null
           workout_id: string
         }
         Insert: {
           completed_at?: string
           device_id: string
           id?: string
+          user_id?: string | null
           workout_id: string
         }
         Update: {
           completed_at?: string
           device_id?: string
           id?: string
+          user_id?: string | null
           workout_id?: string
+        }
+        Relationships: []
+      }
+      workouts: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          id?: string
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          name?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
