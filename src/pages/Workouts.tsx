@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
-import { useOfflineWorkouts } from "@/hooks/useOfflineWorkouts";
+import { useWorkoutsSupabase } from "@/hooks/useWorkoutsSupabase";
 
 interface Exercise {
   name: string;
