@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { useTasksSupabase } from "@/hooks/useTasksSupabase";
 
 const Tasks = () => {
-  const { tasks, loaded, addTask, toggleTask, deleteTask } = useOfflineTasks();
+  const { tasks, loaded, addTask, toggleTask, deleteTask } = useTasksSupabase();
   const [newTask, setNewTask] = useState("");
 
   const handleAddTask = () => {

@@ -45,7 +45,7 @@ const Running = () => {
   const [initialPos, setInitialPos] = useState<GeoPoint | null>(null);
   const watchIdRef = useRef<number | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const { saveSession } = useOfflineRunning();
+  const { saveSession } = useRunningSupabase();
 
   // Capture initial position on page load
   useEffect(() => {

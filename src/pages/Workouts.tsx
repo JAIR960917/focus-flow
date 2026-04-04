@@ -335,7 +335,7 @@ const ActiveWorkout = ({ workout, onFinish, defaultRest }: ActiveWorkoutProps) =
 const Workouts = () => {
   const [expanded, setExpanded] = useState<string | null>(null);
   const [activeWorkoutId, setActiveWorkoutId] = useState<string | null>(null);
-  const { completedIds, toggleWorkout } = useOfflineWorkouts();
+  const { completedIds, toggleWorkout } = useWorkoutsSupabase();
 
   const toggleExpand = (id: string) => setExpanded(expanded === id ? null : id);
 
