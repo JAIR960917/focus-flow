@@ -3,7 +3,7 @@ import { Play, Square, MapPin, Clock, Route } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import RunMap from "@/components/RunMap";
-import { useOfflineRunning } from "@/hooks/useOfflineRunning";
+import { useRunningSupabase } from "@/hooks/useRunningSupabase";
 
 export interface GeoPoint {
   lat: number;
